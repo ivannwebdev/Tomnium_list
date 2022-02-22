@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react'
+import './App.css'
+import { getData } from './promise/getData'
+import { List } from './components/List'
+import { Preloader } from './components/Preloader'
+import { Error } from './components/Error'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    getData()
+      .then(data => setData(data))
+      .catch(error => setError(error))
+  }, [])
+
+  if (error) return <Error error={error} />
+
+  if (!data) return <Preloader />
+
+  return <List data={data} />
 }
 
-export default App;
+export { App }
